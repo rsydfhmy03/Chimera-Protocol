@@ -1,8 +1,13 @@
-<div class="min-h-screen bg-slate-900 grid place-content-center text-center">
-  <h1 class="text-4xl font-bold text-cyan-400 font-mono animate-pulse">
-    [ CHIMERA PROTOCOL // SYSTEM BOOTING... ]
-  </h1>
-  <p class="text-slate-400 font-mono mt-2">
-    Setup Complete. Awaiting first command.
-  </p>
+<script lang="ts">
+    import Button from "$lib/components/ui/Button.svelte";
+</script>
+
+<div class="min-h-screen grid place-content-center text-center gap-4">
+    <h1 class="text-4xl font-bold text-cyan-400 font-mono animate-pulse">
+        CHIMERA PROTOCOL
+    </h1>
+
+    <Button on:click={() => alert('Connection established!')}>
+        [ ENTER SYSTEM ]
+    </Button>
 </div>
