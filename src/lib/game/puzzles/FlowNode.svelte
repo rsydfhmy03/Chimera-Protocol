@@ -4,30 +4,92 @@
   import Button from '$lib/components/ui/Button.svelte';
   import NodePiece from './NodePiece.svelte';
   import { createEventDispatcher } from 'svelte';
-  import { cloneDeep } from 'lodash-es'; // Library helper untuk duplikasi data
 
   export let puzzleData: Level['flowNode'];
   const dispatch = createEventDispatcher();
 
-  // Buat salinan data agar tidak mengubah data level aslinya
-  let gridState: NodePieceData[][] = cloneDeep(puzzleData.layout);
+  let gridState: NodePieceData[][] = JSON.parse(JSON.stringify(puzzleData.layout));
 
   function rotatePiece(rowIndex: number, colIndex: number) {
     const piece = gridState[rowIndex][colIndex];
-    // Hanya putar jika bukan Start, End, atau Empty
     if (piece.type === NodeType.CORNER || piece.type === NodeType.STRAIGHT) {
       piece.rotation = (piece.rotation + 90) % 360 as NodePieceData['rotation'];
-      gridState = gridState; // Memicu reaktivitas
+      gridState = gridState;
     }
   }
 
-  // LOGIKA REAKTIF UNTUK MENGECEK SOLUSI
-  // Ini adalah bagian paling kompleks
+  // --- LOGIKA REAKTIF BARU UNTUK isSolved ---
   $: isSolved = (() => {
-    // Implementasi pathfinding sederhana (DFS)
-    // ... (Logika pathfinding akan ditambahkan di langkah selanjutnya)
-    // UNTUK SEKARANG, kita buat placeholder sederhana
-    return false; // Ganti ini nanti
+    // Helper untuk mendapatkan "pintu" koneksi dari sebuah kepingan
+    const getOpenings = (piece: NodePieceData): ('top' | 'right' | 'bottom' | 'left')[] => {
+      const r = piece.rotation;
+      switch (piece.type) {
+        case NodeType.START:
+          return r === 0 ? ['right'] : r === 90 ? ['bottom'] : r === 180 ? ['left'] : ['top'];
+        case NodeType.END:
+          return r === 0 ? ['right'] : r === 90 ? ['bottom'] : r === 180 ? ['left'] : ['top'];
+        case NodeType.STRAIGHT:
+          return r === 0 || r === 180 ? ['left', 'right'] : ['top', 'bottom'];
+        case NodeType.CORNER:
+          return r === 0 ? ['top', 'right'] : r === 90 ? ['right', 'bottom'] : r === 180 ? ['bottom', 'left'] : ['left', 'top'];
+        default:
+          return [];
+      }
+    };
+
+    const startNode = { row: -1, col: -1 };
+    for (let r = 0; r < puzzleData.size; r++) {
+      for (let c = 0; c < puzzleData.size; c++) {
+        if (gridState[r][c].type === NodeType.START) {
+          startNode.row = r;
+          startNode.col = c;
+          break;
+        }
+      }
+    }
+    if (startNode.row === -1) return false; // Tidak ada start node
+
+    const stack = [startNode];
+    const visited = new Set([`${startNode.row},${startNode.col}`]);
+
+    while (stack.length > 0) {
+      const current = stack.pop()!;
+      const { row, col } = current;
+      const piece = gridState[row][col];
+
+      if (piece.type === NodeType.END) {
+        return true; // Jalur ditemukan!
+      }
+
+      const openings = getOpenings(piece);
+
+      // Cek 4 tetangga (atas, kanan, bawah, kiri)
+      const neighbors = [
+        { r: row - 1, c: col, from: 'bottom', to: 'top' },
+        { r: row, c: col + 1, from: 'left', to: 'right' },
+        { r: row + 1, c: col, from: 'top', to: 'bottom' },
+        { r: row, c: col - 1, from: 'right', to: 'left' },
+      ];
+
+      for (const neighbor of neighbors) {
+        const { r, c, from, to } = neighbor;
+        const key = `${r},${c}`;
+
+        // Cek apakah tetangga valid dan belum dikunjungi
+        if (r >= 0 && r < puzzleData.size && c >= 0 && c < puzzleData.size && !visited.has(key)) {
+          const currentHasOpening = openings.includes(to as "top" | "right" | "bottom" | "left");
+          const neighborPiece = gridState[r][c];
+          const neighborHasOpening = getOpenings(neighborPiece).includes(from as "top" | "right" | "bottom" | "left");
+
+          if (currentHasOpening && neighborHasOpening) {
+            visited.add(key);
+            stack.push({ row: r, col: c });
+          }
+        }
+      }
+    }
+
+    return false; // Loop selesai, End tidak ditemukan
   })();
 
   function handleSuccess() {
