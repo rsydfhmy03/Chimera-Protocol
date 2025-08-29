@@ -1,3 +1,16 @@
+export enum NodeType {
+  EMPTY = 0,
+  CORNER = 1, // siku
+  STRAIGHT = 2, // lurus
+  START = 3,
+  END = 4,
+}
+
+export interface NodePieceData {
+  type: NodeType;
+  rotation: 0 | 90 | 180 | 270; // Derajat rotasi
+}
+
 export interface Level {
   id: string;
   name: string;
@@ -13,10 +26,9 @@ export interface Level {
   };
   flowNode: {
     size: number;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    layout: any[]; 
+    layout: NodePieceData[][]; 
   };
-  unlocks: string; 
+  unlocks: string;
 }
 
 export const levels: Level[] = [
@@ -29,13 +41,27 @@ export const levels: Level[] = [
       size: 2,
       numberRange: [1, 2, 3, 4],
       targets: { rows: [3, 7], cols: [6, 4] },
-      // Solusi: [2, 1], [4, 3]
     },
     flowNode: {
       size: 3,
-      layout: [], 
+      layout: [
+        [
+          { type: NodeType.START, rotation: 90 },
+          { type: NodeType.STRAIGHT, rotation: 90 },
+          { type: NodeType.EMPTY, rotation: 0 },
+        ],
+        [
+          { type: NodeType.CORNER, rotation: 180 },
+          { type: NodeType.CORNER, rotation: 0 },
+          { type: NodeType.STRAIGHT, rotation: 0 },
+        ],
+        [
+          { type: NodeType.EMPTY, rotation: 0 },
+          { type: NodeType.STRAIGHT, rotation: 90 },
+          { type: NodeType.END, rotation: 270 },
+        ],
+      ],
     },
     unlocks: 'node-beta-01',
   },
-  // ... level lainnya
 ];
