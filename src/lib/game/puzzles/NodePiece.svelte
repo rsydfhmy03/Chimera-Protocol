@@ -2,6 +2,7 @@
   import { NodeType, type NodePieceData } from '$lib/game/data/levelData';
 
   export let pieceData: NodePieceData;
+  export const isPowered: boolean = false;
 
   $: rotationStyle = `--rotation: ${pieceData.rotation}deg`;
 </script>
