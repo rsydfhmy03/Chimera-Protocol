@@ -1,64 +1,82 @@
 <script lang="ts">
-  import DecryptionMatrix from '$lib/game/puzzles/DecryptionMatrix.svelte';
-  import SequenceBreaker from '$lib/game/puzzles/SequenceBreaker.svelte'; // Impor komponen baru
-  import { fade } from 'svelte/transition';
   import { goto } from '$app/navigation';
+  import { fade } from 'svelte/transition';
   import { gameState } from '$lib/game/systems/gameState';
-  import Button from '$lib/components/ui/Button.svelte';
+  import { play } from '$lib/game/systems/audioManager';
 
-  export let data;
-  
-  let phase: 'decryption' | 'flow' | 'completed' = 'decryption';
+  import DialogueBox from '$lib/components/ui/DialogueBox.svelte';
+  import DecryptionMatrix from '$lib/game/puzzles/DecryptionMatrix.svelte';
+  import SequenceBreaker from '$lib/game/puzzles/SequenceBreaker.svelte';
+
+  export let data; // Data dari +page.ts
+
+  type MissionState = 'BRIEFING' | 'DECRYPTION' | 'MID_BRIEFING' | 'SEQUENCE' | 'DEBRIEFING' | 'COMPLETED';
+  let missionState: MissionState = 'BRIEFING';
 
   function onDecryptionSuccess() {
-    phase = 'flow'; // 'flow' sekarang berarti Sequence Breaker
+    play('success');
+    missionState = 'MID_BRIEFING';
   }
 
-  function onFlowSuccess() {
-    phase = 'completed';
-    // Update state game (ini tetap sama)
-    gameState.update(current => ({
+  function onSequenceSuccess() {
+    play('success');
+    // Beri hadiah & update progres
+    gameState.update(current => {
+      const completed = new Set([...current.completedNodes, data.level.id]);
+      const unlocked = new Set([...current.unlockedNodes, data.level.unlocks]);
+      return {
         ...current,
         dFrags: current.dFrags + data.level.rewardDFrags,
-        completedNodes: [...current.completedNodes, data.level.id],
-        unlockedNodes: [...current.unlockedNodes, data.level.unlocks]
-    }));
-
-    setTimeout(() => {
-        goto('/dashboard');
-    }, 2000);
+        completedNodes: Array.from(completed),
+        unlockedNodes: Array.from(unlocked)
+      }
+    });
+    missionState = 'DEBRIEFING';
   }
 </script>
 
-<div class="min-h-screen p-4 md:p-8 flex flex-col items-center gap-8">
-  <header class="w-full max-w-2xl text-center relative">
-    <h1 class="text-3xl text-cyan-400">{data.level.name}</h1>
-    <div class="text-yellow-400 font-bold text-lg text-right -mt-8">
-      dFrags: {$gameState.dFrags}
+<div class="min-h-screen p-4 md:p-8 flex flex-col items-center justify-center gap-8">
+  <h1 class="text-3xl text-cyan-400 absolute top-8">{data.level.name}</h1>
+  
+  {#if missionState === 'BRIEFING'}
+    <div in:fade>
+      <DialogueBox 
+        lines={data.level.dialogue.briefing} 
+        on:end={() => { play('click'); missionState = 'DECRYPTION'; }}
+      />
     </div>
-    {#if phase === 'decryption'}
-      <p class="text-slate-400 mt-2">{data.level.briefing}</p>
-    {/if}
-  </header>
-
-  {#if phase === 'decryption'}
-    <div in:fade={{ duration: 300 }}>
+  {:else if missionState === 'DECRYPTION'}
+    <div in:fade>
       <DecryptionMatrix 
         puzzleData={data.level.decryptionMatrix}
         on:success={onDecryptionSuccess}
       />
     </div>
-  {:else if phase === 'flow'}
-    <div in:fade={{ duration: 300 }}>
-      <SequenceBreaker 
-        puzzleData={data.level.sequenceBreaker}
-        on:success={onFlowSuccess}
+  {:else if missionState === 'MID_BRIEFING'}
+    <div in:fade>
+      <DialogueBox 
+        lines={data.level.dialogue.mid_briefing} 
+        on:end={() => { play('click'); missionState = 'SEQUENCE'; }}
       />
     </div>
-  {:else if phase === 'completed'}
-    <div in:fade={{ duration: 300 }} class="text-center">
-        <h2 class="text-2xl text-green-400">NODE SECURED</h2>
-        <p>Redirecting to Mission Dashboard...</p>
+  {:else if missionState === 'SEQUENCE'}
+    <div in:fade>
+      <SequenceBreaker 
+        puzzleData={data.level.sequenceBreaker}
+        on:success={onSequenceSuccess}
+      />
     </div>
+  {:else if missionState === 'DEBRIEFING'}
+    <div in:fade>
+      <DialogueBox 
+        lines={data.level.dialogue.debriefing} 
+        on:end={() => {
+          missionState = 'COMPLETED';
+          setTimeout(() => goto('/dashboard'), 1000);
+        }}
+      />
+    </div>
+  {:else if missionState === 'COMPLETED'}
+     <div class="text-2xl text-green-400">MISSION COMPLETE</div>
   {/if}
 </div>
