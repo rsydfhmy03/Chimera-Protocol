@@ -5,15 +5,17 @@ export interface GameState {
   dFrags: number;
   unlockedNodes: string[];
   completedNodes: string[];
+  unlockedCodexIds: string[];
   activeNode: string | null;
 }
 
 
 const initialState: GameState = {
   operativeCodename: null,
-  dFrags: 0,
-  unlockedNodes: ['node-alpha-01'], // Node pertama selalu terbuka
+  dFrags: 100,
+  unlockedNodes: ['node-alpha-01'],
   completedNodes: [],
+  unlockedCodexIds: [], 
   activeNode: null,
 };
 

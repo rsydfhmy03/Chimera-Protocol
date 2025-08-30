@@ -1,20 +1,16 @@
-export enum NodeType {
-  EMPTY = 0,
-  CORNER = 1,
-  STRAIGHT = 2,
-  START = 3,
-  END = 4,
-}
-
-export interface NodePieceData {
-  type: NodeType;
-  rotation: 0 | 90 | 180 | 270;
+export interface DialogueLine {
+  speaker: 'Oracle' | 'Chimera' | 'System';
+  text: string;
 }
 
 export interface Level {
   id: string;
   name: string;
-  briefing: string;
+   dialogue: {
+    briefing: DialogueLine[];
+    mid_briefing: DialogueLine[];
+    debriefing: DialogueLine[];
+  };
   rewardDFrags: number;
   decryptionMatrix: {
     size: number;
@@ -24,48 +20,73 @@ export interface Level {
       cols: number[];
     };
   };
-  flowNode: {
-    size: number;
-    layout: NodePieceData[][];
+  sequenceBreaker: {
+    buttonCount: number; 
+    sequenceLength: number; 
   };
   unlocks: string;
+  unlocksCodexId?: string;
 }
 
 export const levels: Level[] = [
   {
     id: 'node-alpha-01',
     name: 'Training Simulation',
-    briefing: 'Selamat datang, Operative...',
+    dialogue: {
+      briefing: [
+        { speaker: 'Oracle', text: 'Selamat datang, Operative. Sistem ini adalah simulasi dari pertahanan dasar Chimera.' },
+        { speaker: 'Oracle', text: 'Tugas pertamamu adalah menembus firewall enkripsinya. Perhatikan target angka di setiap baris dan kolom.' },
+        { speaker: 'System', text: 'Initializing Decryption Matrix...' },
+      ],
+      mid_briefing: [
+        { speaker: 'Oracle', text: 'Kerja bagus. Enkripsi terbuka. Sekarang bagian yang lebih sulit.' },
+        { speaker: 'Oracle', text: 'Chimera melindungi nodenya dengan pola sinyal acak. Kau harus meniru pola tersebut tanpa kesalahan untuk mengambil alih kendali.' },
+        { speaker: 'System', text: 'Initializing Sequence Breaker...' },
+      ],
+      debriefing: [
+        { speaker: 'System', text: 'NODE SECURED. SIMULATION COMPLETE.' },
+        { speaker: 'Oracle', text: 'Hasil yang luar biasa, Operative. Kau siap untuk misi yang sesungguhnya. Data Fragments telah ditransfer ke akunmu.' },
+      ],
+    },
     rewardDFrags: 50,
     decryptionMatrix: {
       size: 2,
       numberRange: [1, 2, 3, 4],
       targets: { rows: [3, 7], cols: [6, 4] },
     },
-    // --- 📐 DESAIN LEVEL BARU YANG BISA DISELESAIKAN 📐 ---
-    flowNode: {
-      size: 3,
-      layout: [
-        // Baris 1
-        [
-          { type: NodeType.START, rotation: 90 },
-          { type: NodeType.CORNER, rotation: 180 }, // Bisa diputar
-          { type: NodeType.STRAIGHT, rotation: 0 },
-        ],
-        // Baris 2
-        [
-          { type: NodeType.STRAIGHT, rotation: 90 },
-          { type: NodeType.CORNER, rotation: 270 }, // Bisa diputar
-          { type: NodeType.STRAIGHT, rotation: 90 },
-        ],
-        // Baris 3
-        [
-          { type: NodeType.CORNER, rotation: 0 },   // Bisa diputar
-          { type: NodeType.STRAIGHT, rotation: 0 },
-          { type: NodeType.END, rotation: 180 },
-        ],
-      ],
+    sequenceBreaker: {
+      buttonCount: 4,
+      sequenceLength: 4,
     },
     unlocks: 'node-beta-01',
+    unlocksCodexId: 'what-is-chimera',
+  },
+  {
+    id: 'node-beta-01',
+    name: 'Echoes of the Past',
+    dialogue: {
+      briefing: [
+        { speaker: 'Oracle', text: 'Kami mendeteksi anomali. Chimera mengakses arsip data finansial yang terlupakan.' },
+        { speaker: 'Oracle', text: 'Ia mencari sesuatu di masa lalu. Masuk dan pecahkan enkripsinya.' },
+      ],
+      mid_briefing: [
+        { speaker: 'Oracle', text: 'Akses diberikan. Pola sinyalnya lebih kompleks dari simulasi. Tetap fokus.' },
+      ],
+      debriefing: [
+        { speaker: 'Oracle', text: 'Kerja bagus. Kami berhasil mengekstrak fragmen data dari log yang Chimera akses. Akan kami analisis. Transfer dFrags berhasil.' },
+      ],
+    },
+    rewardDFrags: 75,
+    decryptionMatrix: {
+      size: 3,
+      numberRange: [1, 2, 3, 4, 5, 6],
+      targets: { rows: [6, 15, 9], cols: [11, 8, 11] }, // Solusi: [1,2,3], [4,5,6], [6,1,2]
+    },
+    sequenceBreaker: {
+      buttonCount: 4,
+      sequenceLength: 5,
+    },
+    unlocks: 'node-gamma-01', // ID untuk misi 3 nanti
+    unlocksCodexId: 'project-genesis',
   },
 ];
