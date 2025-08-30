@@ -11,7 +11,7 @@ export interface GameState {
 
 const initialState: GameState = {
   operativeCodename: null,
-  dFrags: 0,
+  dFrags: 100,
   unlockedNodes: ['node-alpha-01'], // Node pertama selalu terbuka
   completedNodes: [],
   activeNode: null,
