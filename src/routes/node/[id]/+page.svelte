@@ -24,11 +24,16 @@
     gameState.update(current => {
       const completed = new Set([...current.completedNodes, data.level.id]);
       const unlocked = new Set([...current.unlockedNodes, data.level.unlocks]);
+      const codex = new Set(current.unlockedCodexIds);
+      if (data.level.unlocksCodexId) {
+        codex.add(data.level.unlocksCodexId);
+      }
       return {
         ...current,
         dFrags: current.dFrags + data.level.rewardDFrags,
         completedNodes: Array.from(completed),
-        unlockedNodes: Array.from(unlocked)
+        unlockedNodes: Array.from(unlocked),
+        unlockedCodexIds: Array.from(codex),
       }
     });
     missionState = 'DEBRIEFING';

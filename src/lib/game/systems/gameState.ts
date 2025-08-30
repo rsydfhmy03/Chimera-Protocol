@@ -5,6 +5,7 @@ export interface GameState {
   dFrags: number;
   unlockedNodes: string[];
   completedNodes: string[];
+  unlockedCodexIds: string[];
   activeNode: string | null;
 }
 
@@ -12,8 +13,9 @@ export interface GameState {
 const initialState: GameState = {
   operativeCodename: null,
   dFrags: 100,
-  unlockedNodes: ['node-alpha-01'], // Node pertama selalu terbuka
+  unlockedNodes: ['node-alpha-01'],
   completedNodes: [],
+  unlockedCodexIds: [], 
   activeNode: null,
 };
 

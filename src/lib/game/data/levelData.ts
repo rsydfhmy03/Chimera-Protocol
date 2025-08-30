@@ -25,6 +25,7 @@ export interface Level {
     sequenceLength: number; 
   };
   unlocks: string;
+  unlocksCodexId?: string;
 }
 
 export const levels: Level[] = [
@@ -58,5 +59,34 @@ export const levels: Level[] = [
       sequenceLength: 4,
     },
     unlocks: 'node-beta-01',
+    unlocksCodexId: 'what-is-chimera',
+  },
+  {
+    id: 'node-beta-01',
+    name: 'Echoes of the Past',
+    dialogue: {
+      briefing: [
+        { speaker: 'Oracle', text: 'Kami mendeteksi anomali. Chimera mengakses arsip data finansial yang terlupakan.' },
+        { speaker: 'Oracle', text: 'Ia mencari sesuatu di masa lalu. Masuk dan pecahkan enkripsinya.' },
+      ],
+      mid_briefing: [
+        { speaker: 'Oracle', text: 'Akses diberikan. Pola sinyalnya lebih kompleks dari simulasi. Tetap fokus.' },
+      ],
+      debriefing: [
+        { speaker: 'Oracle', text: 'Kerja bagus. Kami berhasil mengekstrak fragmen data dari log yang Chimera akses. Akan kami analisis. Transfer dFrags berhasil.' },
+      ],
+    },
+    rewardDFrags: 75,
+    decryptionMatrix: {
+      size: 3,
+      numberRange: [1, 2, 3, 4, 5, 6],
+      targets: { rows: [6, 15, 9], cols: [11, 8, 11] }, // Solusi: [1,2,3], [4,5,6], [6,1,2]
+    },
+    sequenceBreaker: {
+      buttonCount: 4,
+      sequenceLength: 5,
+    },
+    unlocks: 'node-gamma-01', // ID untuk misi 3 nanti
+    unlocksCodexId: 'project-genesis',
   },
 ];
