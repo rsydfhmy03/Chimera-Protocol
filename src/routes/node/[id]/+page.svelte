@@ -1,4 +1,5 @@
 <script lang="ts">
+  import WindowFrame from '$lib/components/ui/WindowFrame.svelte';
   import { goto } from '$app/navigation';
   import { fade } from 'svelte/transition';
   import { gameState } from '$lib/game/systems/gameState';
@@ -45,24 +46,30 @@
   
   {#if missionState === 'BRIEFING'}
     <div in:fade>
-      <DialogueBox 
-        lines={data.level.dialogue.briefing} 
-        on:end={() => { play('click'); missionState = 'DECRYPTION'; }}
-      />
+      <WindowFrame title={data.level.name}>
+        <DialogueBox 
+          lines={data.level.dialogue.briefing} 
+          on:end={() => { play('click'); missionState = 'DECRYPTION'; }}
+        />
+      </WindowFrame>
     </div>
   {:else if missionState === 'DECRYPTION'}
     <div in:fade>
-      <DecryptionMatrix 
-        puzzleData={data.level.decryptionMatrix}
-        on:success={onDecryptionSuccess}
-      />
+      <WindowFrame title="Phase 1: Decryption Matrix">
+        <DecryptionMatrix 
+          puzzleData={data.level.decryptionMatrix}
+          on:success={onDecryptionSuccess}
+        />
+      </WindowFrame>
     </div>
   {:else if missionState === 'MID_BRIEFING'}
     <div in:fade>
+      <WindowFrame title="Phase 2: Sequence Breaker">
       <DialogueBox 
         lines={data.level.dialogue.mid_briefing} 
         on:end={() => { play('click'); missionState = 'SEQUENCE'; }}
       />
+      </WindowFrame>
     </div>
   {:else if missionState === 'SEQUENCE'}
     <div in:fade>
