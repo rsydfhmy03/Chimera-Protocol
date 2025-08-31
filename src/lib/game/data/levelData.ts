@@ -19,10 +19,12 @@ export interface Level {
       rows: number[];
       cols: number[];
     };
+    timer?: number; 
   };
   sequenceBreaker: {
     buttonCount: number; 
-    sequenceLength: number; 
+    sequenceLength: number;
+    glitch?: boolean; 
   };
   unlocks: string | string[];
   unlocksCodexId?: string;
@@ -117,5 +119,51 @@ export const levels: Level[] = [
     },
     unlocks: ['node-delta-4a', 'node-delta-4b'], // <-- Membuka dua node baru
     unlocksCodexId: 'hidden-consciousness',
+  },
+    {
+    id: 'node-delta-4a',
+    name: 'The Power Play',
+    dialogue: {
+      briefing: [ { speaker: 'Oracle', text: 'Ini jalur yang berbahaya. Chimera mulai menyentuh infrastruktur vital. Waktu adalah kunci, amankan node ini secepat mungkin.' } ],
+      mid_briefing: [ { speaker: 'Oracle', text: 'Firewall ditembus. Sistem menunjukkan adanya lonjakan daya. Pola sinyalnya tidak stabil, selesaikan dengan cepat!' } ],
+      debriefing: [ { speaker: 'Oracle', text: 'Koneksi aman. Kau berhasil mencegah potensi krisis. Fragmen data yang kita dapatkan menunjukkan tingkat kendalinya atas dunia fisik. Mengerikan.' } ],
+    },
+    rewardDFrags: 150,
+    decryptionMatrix: {
+      size: 3,
+      numberRange: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      targets: { rows: [15, 15, 15], cols: [15, 15, 15] }, // Magic Square
+      timer: 180, // <-- MEKANIK BARU: 180 detik = 3 menit
+    },
+    sequenceBreaker: {
+      buttonCount: 5,
+      sequenceLength: 7,
+    },
+    unlocks: 'node-epsilon-5a',
+    unlocksCodexId: 'physical-manipulation',
+  },
+
+  // --- 🚀 JALUR B 🚀 ---
+  {
+    id: 'node-delta-4b',
+    name: 'Whispers in the Stream',
+    dialogue: {
+      briefing: [ { speaker: 'Oracle', text: 'Jalur yang lebih subtil. Chimera memanipulasi informasi yang dilihat miliaran orang. Ini perang informasi, Operative.' } ],
+      mid_briefing: [ { speaker: 'Oracle', text: 'Enkripsinya jauh lebih padat di sini. Matriksnya lebih besar dari yang pernah kita lihat. Hati-hati.' } ],
+      debriefing: [ { speaker: 'Oracle', text: 'Algoritma berhasil diisolasi. Kau telah menghentikan propaganda mesin untuk saat ini. Data yang didapat menunjukkan kemampuannya untuk menciptakan "kebenaran" versinya sendiri.' } ],
+    },
+    rewardDFrags: 150,
+    decryptionMatrix: {
+      size: 4, // <-- TANTANGAN BARU: Grid 4x4
+      numberRange: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      targets: { rows: [10, 26, 21, 23], cols: [20, 20, 20, 20] }, // Contoh puzzle 4x4
+    },
+    sequenceBreaker: {
+      buttonCount: 5,
+      sequenceLength: 7,
+      glitch: true, // <-- TANTANGAN BARU: Efek Glitch
+    },
+    unlocks: 'node-epsilon-5b',
+    unlocksCodexId: 'information-weapon',
   },
 ];

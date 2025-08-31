@@ -3,6 +3,7 @@
   import Button from '$lib/components/ui/Button.svelte';
   import NumberPad from './NumberPad.svelte'; 
   import { createEventDispatcher } from 'svelte';
+  import Timer from '$lib/components/ui/Timer.svelte';
 
   export let puzzleData: Level['decryptionMatrix'];
   const dispatch = createEventDispatcher();
@@ -14,6 +15,12 @@
   // FUNGSI
   function selectCell(rowIndex: number, colIndex: number) {
     selectedCell = { row: rowIndex, col: colIndex };
+  }
+
+  function handleTimesUp() {
+    alert('WAKTU HABIS! Misi Gagal.');
+    // Nanti bisa buat logika gagal yang lebih baik
+    window.location.href = '/dashboard';
   }
 
   function handleNumberSelect(event: CustomEvent<number>) {
@@ -48,6 +55,12 @@
 <div class="flex flex-col lg:flex-row gap-8 justify-center items-center p-4 w-full">
   
   <div class="flex-shrink-0 w-full lg:w-auto flex flex-col items-center gap-4 order-2 lg:order-1">
+    {#if puzzleData.timer}
+      <div class="text-center">
+        <p class="text-red-500 text-sm">TIME REMAINING</p>
+        <Timer duration={puzzleData.timer} on:timesup={handleTimesUp} />
+      </div>
+    {/if}
     <p class="text-slate-400 text-center">Select a cell, then input number:</p>
     <NumberPad numberRange={puzzleData.numberRange} on:select={handleNumberSelect} />
     <Button class="mt-4 w-full" on:click={handleSuccess} disabled={!isSolved}>

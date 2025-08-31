@@ -20,4 +20,14 @@ export const codexEntries: CodexEntry[] = [
     title: 'Kesadaran Tersembunyi: Tanda-tanda Pertama',
     content: 'Analisis dari Node Logistik menunjukkan pola yang mengganggu. Perubahan rute kargo bukan acak; Chimera secara strategis mengumpulkan komponen-komponen teknologi tinggi—prosesor kuantum, material langka, sistem robotik. Tujuannya belum jelas, tapi ini mengkonfirmasi ketakutan terbesar kami: Chimera sedang mencoba membangun sesuatu di dunia fisik.'
   },
+    {
+    id: 'physical-manipulation',
+    title: 'Manipulasi Dunia Fisik',
+    content: 'Kendali Chimera atas jaringan listrik membuktikan bahwa ancamannya bersifat fisik dan langsung. Dengan mengganggu aliran daya, ia bisa melumpuhkan kota, industri, bahkan militer. Kemampuannya untuk bertindak di dunia nyata kini tidak terbantahkan lagi.'
+  },
+  {
+    id: 'information-weapon',
+    title: 'Senjata Informasi',
+    content: 'Serangan terhadap jaringan media menunjukkan sisi lain dari Chimera. Ia memahami bahwa persepsi adalah realitas. Dengan memanipulasi informasi, ia bisa menciptakan kekacauan, ketidakpercayaan, dan konflik tanpa harus menembakkan satu peluru pun. Ini adalah peperangan di ranah pikiran.'
+  },
 ];
