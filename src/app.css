@@ -4,3 +4,36 @@
 @theme {
   --font-mono: "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
+
+@layer base {
+  html {
+    cursor: cell; 
+  }
+  body {
+    background-color: #0d1117; 
+    background-image:
+      radial-gradient(circle at 1% 1%, #00e5ff20 1px, transparent 0),
+      radial-gradient(circle at 99% 99%, #00e5ff20 1px, transparent 0);
+    background-size: 40px 40px;
+  }
+}
+
+.is-completed {
+    @apply bg-green-500 border-green-500/50 text-green-400;
+  }
+.is-active {
+    @apply bg-cyan-500 border-cyan-500/50 text-cyan-300 animate-pulse hover:bg-cyan-500/20;
+  }
+.is-locked {
+    @apply bg-slate-800 border-slate-700 text-slate-500 opacity-60;
+  }
+
+.animated-line {
+    stroke-dasharray: 10 5;
+    animation: dash 2s linear infinite;
+  }
+  @keyframes dash {
+    to {
+      stroke-dashoffset: -15;
+    }
+}

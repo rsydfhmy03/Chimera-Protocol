@@ -1,4 +1,5 @@
 <script lang="ts">
+  import WindowFrame from '$lib/components/ui/WindowFrame.svelte';
   import { goto } from '$app/navigation';
   import { fade } from 'svelte/transition';
   import { gameState } from '$lib/game/systems/gameState';
@@ -23,10 +24,20 @@
     // Beri hadiah & update progres
     gameState.update(current => {
       const completed = new Set([...current.completedNodes, data.level.id]);
-      const unlocked = new Set([...current.unlockedNodes, data.level.unlocks]);
+      
+      // --- LOGIKA UNLOCK BARU ---
+      const unlocked = new Set(current.unlockedNodes);
+      if (Array.isArray(data.level.unlocks)) {
+        // Jika unlocks adalah array, tambahkan semua isinya
+        data.level.unlocks.forEach(id => unlocked.add(id));
+      } else {
+        // Jika hanya string biasa, tambahkan seperti biasa
+        unlocked.add(data.level.unlocks);
+      }
+      
       const codex = new Set(current.unlockedCodexIds);
       if (data.level.unlocksCodexId) {
-        codex.add(data.level.unlocksCodexId);
+          codex.add(data.level.unlocksCodexId);
       }
       return {
         ...current,
@@ -45,24 +56,30 @@
   
   {#if missionState === 'BRIEFING'}
     <div in:fade>
-      <DialogueBox 
-        lines={data.level.dialogue.briefing} 
-        on:end={() => { play('click'); missionState = 'DECRYPTION'; }}
-      />
+      <WindowFrame title={data.level.name}>
+        <DialogueBox 
+          lines={data.level.dialogue.briefing} 
+          on:end={() => { play('click'); missionState = 'DECRYPTION'; }}
+        />
+      </WindowFrame>
     </div>
   {:else if missionState === 'DECRYPTION'}
     <div in:fade>
-      <DecryptionMatrix 
-        puzzleData={data.level.decryptionMatrix}
-        on:success={onDecryptionSuccess}
-      />
+      <WindowFrame title="Phase 1: Decryption Matrix">
+        <DecryptionMatrix 
+          puzzleData={data.level.decryptionMatrix}
+          on:success={onDecryptionSuccess}
+        />
+      </WindowFrame>
     </div>
   {:else if missionState === 'MID_BRIEFING'}
     <div in:fade>
+      <WindowFrame title="Phase 2: Sequence Breaker">
       <DialogueBox 
         lines={data.level.dialogue.mid_briefing} 
         on:end={() => { play('click'); missionState = 'SEQUENCE'; }}
       />
+      </WindowFrame>
     </div>
   {:else if missionState === 'SEQUENCE'}
     <div in:fade>
