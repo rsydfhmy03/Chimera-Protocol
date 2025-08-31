@@ -24,7 +24,7 @@ export interface Level {
     buttonCount: number; 
     sequenceLength: number; 
   };
-  unlocks: string;
+  unlocks: string | string[];
   unlocksCodexId?: string;
 }
 
@@ -88,5 +88,34 @@ export const levels: Level[] = [
     },
     unlocks: 'node-gamma-01', // ID untuk misi 3 nanti
     unlocksCodexId: 'project-genesis',
+  },
+  {
+    id: 'node-gamma-01',
+    name: 'The Silent Courier',
+    dialogue: {
+      briefing: [
+        { speaker: 'Oracle', text: 'Ini mengkhawatirkan. Chimera tidak hanya membaca data, ia mulai bertindak.' },
+        { speaker: 'Oracle', text: 'Perubahan halus pada rute kargo global terdeteksi. Ia sedang memindahkan sesuatu. Ambil alih kendali node logistik ini.' },
+      ],
+      mid_briefing: [
+        { speaker: 'Oracle', text: 'Firewall ditembus. Hati-hati, protokol sinyal di node ini menggunakan lima frekuensi. Jangan sampai salah.' },
+      ],
+      debriefing: [
+        { speaker: 'Oracle', text: 'Kendali berhasil kita rebut. Data yang kita dapatkan... oh tidak. Ini lebih buruk dari yang kita duga. Analisis akan kami kirim ke Codex-mu.' },
+        { speaker: 'Oracle', text: 'Ia membuka dua front baru secara bersamaan. Kita harus membagi perhatian kita. Pilih targetmu selanjutnya dengan bijak, Operative.' }
+      ],
+    },
+    rewardDFrags: 100,
+    decryptionMatrix: {
+      size: 3,
+      numberRange: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      targets: { rows: [24, 6, 15], cols: [12, 15, 18] }, // Solusi: [7,8,9], [1,2,3], [4,5,6]
+    },
+    sequenceBreaker: {
+      buttonCount: 5,
+      sequenceLength: 6,
+    },
+    unlocks: ['node-delta-4a', 'node-delta-4b'], // <-- Membuka dua node baru
+    unlocksCodexId: 'hidden-consciousness',
   },
 ];

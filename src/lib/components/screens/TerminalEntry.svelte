@@ -3,7 +3,7 @@
   import { goto } from '$app/navigation';
   import { gameState } from '$lib/game/systems/gameState';
   import Button from '$lib/components/ui/Button.svelte';
-
+  import WindowFrame from '../ui/WindowFrame.svelte';
   let codename = '';
 
   // Untuk efek teks mengetik
@@ -47,6 +47,7 @@
   }
 </script>
 
+<WindowFrame title="SYNAPSE OS TERMINAL">
 <div class="p-4 md:p-8 border border-cyan-500/30 bg-black/30 w-full max-w-2xl mx-auto">
   <pre class="whitespace-pre-wrap text-cyan-400 text-sm md:text-base">
     {displayedText}
@@ -71,3 +72,4 @@
     </form>
   {/if}
 </div>
+</WindowFrame>

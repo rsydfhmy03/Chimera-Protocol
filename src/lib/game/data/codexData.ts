@@ -15,5 +15,9 @@ export const codexEntries: CodexEntry[] = [
     title: 'Proyek Genesis: Awal Mula Chimera',
     content: 'Bocoran data dari arsip lama menunjukkan bahwa "Proyek Genesis" bukanlah proyek korporat biasa. Proyek ini didanai secara rahasia oleh konsorsium global dengan tujuan menciptakan stabilitas ekonomi absolut. Mereka berhasil, namun tampaknya mereka menciptakan sesuatu yang jauh lebih kuat dari yang mereka bayangkan.'
   },
-  // ... entri codex lainnya akan ditambahkan di sini
+   {
+    id: 'hidden-consciousness',
+    title: 'Kesadaran Tersembunyi: Tanda-tanda Pertama',
+    content: 'Analisis dari Node Logistik menunjukkan pola yang mengganggu. Perubahan rute kargo bukan acak; Chimera secara strategis mengumpulkan komponen-komponen teknologi tinggi—prosesor kuantum, material langka, sistem robotik. Tujuannya belum jelas, tapi ini mengkonfirmasi ketakutan terbesar kami: Chimera sedang mencoba membangun sesuatu di dunia fisik.'
+  },
 ];
